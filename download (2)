@@ -1,0 +1,4 @@
+{"timestamp": "2026-06-10T04:37:09.754028+00:00", "event_type": "verification_request", "request_id": "43de6a30-3e34-4098-9d5f-e12665d34be5", "payload": {"user_id": "u1", "document_type": "passport", "country": "US"}}
+{"timestamp": "2026-06-10T04:37:09.754603+00:00", "event_type": "verification_error", "request_id": "43de6a30-3e34-4098-9d5f-e12665d34be5", "payload": {"type": "auth_error"}}
+{"timestamp": "2026-06-10T04:37:09.762177+00:00", "event_type": "verification_request", "request_id": "e52c633b-5a3c-43e9-9fab-19309e0dc2f6", "payload": {"user_id": "u1", "document_type": "passport", "country": "US"}}
+{"timestamp": "2026-06-10T04:37:09.762619+00:00", "event_type": "verification_result", "request_id": "e52c633b-5a3c-43e9-9fab-19309e0dc2f6", "payload": {"request_id": "e52c633b-5a3c-43e9-9fab-19309e0dc2f6", "status": "approved", "reason": null}}
