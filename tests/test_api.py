@@ -1,7 +1,5 @@
-import sys
-from pathlib import Path
-sys.path.append(str(Path(__file__).resolve().parents[1]))
 from fastapi.testclient import TestClient
+
 from app.main import app
 
 client = TestClient(app)
@@ -14,7 +12,10 @@ def test_health():
 
 
 def test_verification_requires_api_key():
-    response = client.post("/verifications", json={"user_id":"u1","document_type":"passport","country":"US"})
+    response = client.post(
+        "/verifications",
+        json={"user_id": "u1", "document_type": "passport", "country": "US"},
+    )
     assert response.status_code == 401
 
 
@@ -22,7 +23,7 @@ def test_verification_success():
     response = client.post(
         "/verifications",
         headers={"x-api-key": "demo-key"},
-        json={"user_id":"u1","document_type":"passport","country":"US"},
+        json={"user_id": "u1", "document_type": "passport", "country": "US"},
     )
     assert response.status_code == 200
     assert response.json()["status"] == "approved"

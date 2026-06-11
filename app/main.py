@@ -1,10 +1,12 @@
-from fastapi import FastAPI, Header, HTTPException, Request
-from fastapi.responses import JSONResponse
-from uuid import uuid4
 from datetime import datetime, timezone
-from typing import Optional
 import json
 from pathlib import Path
+from typing import Optional
+from uuid import uuid4
+
+from fastapi import FastAPI, Header, HTTPException, Request
+from fastapi.responses import JSONResponse
+
 from .models import VerificationRequest, VerificationResponse
 
 app = FastAPI(title="API Support Lab", version="1.0.0")
@@ -37,7 +39,11 @@ def health():
 
 
 @app.post("/verifications", response_model=VerificationResponse)
-def create_verification(body: VerificationRequest, x_api_key: Optional[str] = Header(default=None), x_request_id: Optional[str] = Header(default=None)):
+def create_verification(
+    body: VerificationRequest,
+    x_api_key: Optional[str] = Header(default=None),
+    x_request_id: Optional[str] = Header(default=None),
+):
     request_id = x_request_id or str(uuid4())
     log_event("verification_request", request_id, body.model_dump())
 
@@ -47,14 +53,26 @@ def create_verification(body: VerificationRequest, x_api_key: Optional[str] = He
 
     mode = STATE["incident_mode"]
     if mode == "timeout":
-        log_event("verification_error", request_id, {"type": "timeout", "message": "Downstream provider timeout"})
+        log_event(
+            "verification_error",
+            request_id,
+            {"type": "timeout", "message": "Downstream provider timeout"},
+        )
         raise HTTPException(status_code=504, detail="Downstream provider timeout")
     if mode == "auth_error":
         log_event("verification_error", request_id, {"type": "provider_auth_error"})
         raise HTTPException(status_code=502, detail="Provider authentication failure")
     if mode == "validation_error":
-        log_event("verification_result", request_id, {"status": "failed", "reason": "document image quality too low"})
-        return VerificationResponse(request_id=request_id, status="failed", reason="document image quality too low")
+        log_event(
+            "verification_result",
+            request_id,
+            {"status": "failed", "reason": "document image quality too low"},
+        )
+        return VerificationResponse(
+            request_id=request_id,
+            status="failed",
+            reason="document image quality too low",
+        )
 
     status = "review" if body.country.upper() != "US" else "approved"
     reason = None if status == "approved" else "manual review required for non-US document"
