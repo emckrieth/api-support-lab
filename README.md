@@ -90,22 +90,22 @@ The project intentionally uses a small API so the support workflow is easy to in
 
 ```text
 api-support-lab/
-??? README.md
-??? Dockerfile
-??? requirements.txt
-??? app/
-?   ??? __init__.py
-?   ??? main.py
-?   ??? models.py
-??? docs/
-?   ??? incident_runbook.md
-?   ??? production_support_playbook.md
-?   ??? sample_bug_report.md
-??? scripts/
-?   ??? replay_webhook.py
-??? tests/
-?   ??? test_api.py
-??? support_events.log
+|-- README.md
+|-- Dockerfile
+|-- requirements.txt
+|-- app/
+|   |-- __init__.py
+|   |-- main.py
+|   `-- models.py
+|-- docs/
+|   |-- incident_runbook.md
+|   |-- production_support_playbook.md
+|   `-- sample_bug_report.md
+|-- scripts/
+|   `-- replay_webhook.py
+|-- tests/
+|   `-- test_api.py
+`-- support_events.log
 ```
 
 ## Suggested GitHub Pin Description
