@@ -67,6 +67,25 @@ curl http://127.0.0.1:8000/admin/logs
 - Distinguish API timeout vs. validation failure vs. auth failure
 - Capture a clean engineering escalation with logs and reproduction steps
 
+## How This Maps to Production Support
+
+This lab is designed around the same workflow used in production application support:
+
+- triage an incident by impact, symptoms, and reproducibility
+- use health checks, logs, and request IDs to narrow the failure path
+- separate authentication, validation, timeout, and downstream dependency issues
+- document a concise escalation with evidence for engineering or vendor partners
+- validate expected behavior with repeatable test cases before and after a change
+
+The project intentionally uses a small API so the support workflow is easy to inspect. In a real environment, the same approach would apply to larger systems running on Linux virtual machines, cloud infrastructure, and managed databases.
+
+## ITIL-Style Support Practices Reflected
+
+- **Incident management:** reproduce and classify user-facing failures quickly.
+- **Problem management:** compare repeated error signatures to identify recurring root causes.
+- **Change validation:** use tests and controlled incident modes to confirm behavior after fixes.
+- **Knowledge management:** keep runbooks and bug reports clear enough for handoff.
+
 ## Project Structure
 
 ```text
@@ -80,6 +99,7 @@ api-support-lab/
 ?   ??? models.py
 ??? docs/
 ?   ??? incident_runbook.md
+?   ??? production_support_playbook.md
 ?   ??? sample_bug_report.md
 ??? scripts/
 ?   ??? replay_webhook.py
