@@ -67,6 +67,8 @@ curl http://127.0.0.1:8000/admin/logs
 - Distinguish API timeout vs. validation failure vs. auth failure
 - Capture a clean engineering escalation with logs and reproduction steps
 
+See `docs/troubleshooting-guide.md` for a support-focused symptom-to-action guide.
+
 ## How This Maps to Production Support
 
 This lab is designed around the same workflow used in production application support:
@@ -100,7 +102,8 @@ api-support-lab/
 |-- docs/
 |   |-- incident_runbook.md
 |   |-- production_support_playbook.md
-|   `-- sample_bug_report.md
+|   |-- sample_bug_report.md
+|   `-- troubleshooting-guide.md
 |-- scripts/
 |   `-- replay_webhook.py
 |-- tests/
