@@ -14,6 +14,8 @@ A small, fully functional support-engineering lab built to demonstrate API troub
 
 ### Local
 
+Recommended Python version: 3.12. The pinned FastAPI and Pydantic stack is tested with Python 3.12. Very recent Python versions may require native package builds that are not needed for normal use.
+
 ```bash
 python -m venv .venv
 .venv\Scripts\activate
