@@ -37,6 +37,17 @@ class Clock:
         return self.now
 
 
+class FakeTimer:
+    """Stands in for perf_counter so every simulated request takes 6 ms and the log is reproducible."""
+
+    def __init__(self) -> None:
+        self.calls = 0
+
+    def __call__(self) -> float:
+        self.calls += 1
+        return self.calls * 0.006
+
+
 def build_event(rng: random.Random, index: int) -> dict:
     billing = rng.choice(COUNTRIES)
     mismatch = rng.random() < 0.08
@@ -67,6 +78,7 @@ def main() -> None:
     clock = Clock()
     api.LOG_PATH = args.output
     api.utcnow = clock
+    api.perf_counter = FakeTimer()
     METRICS.reset()
 
     rng = random.Random(SEED)
@@ -74,14 +86,14 @@ def main() -> None:
     headers = {"x-api-key": "demo-key"}
     index = 0
     for mode in ("normal", "rules_regression"):
-        client.post("/admin/incident-mode/" + mode)
+        client.post("/admin/incident-mode/" + mode, headers={"x-request-id": f"admin-{mode}"})
         for _ in range(EVENTS_PER_PHASE):
             headers["x-request-id"] = f"req-{index:05d}"
             response = client.post("/risk/decisions", json=build_event(rng, index), headers=headers)
             response.raise_for_status()
             clock.now += STEP
             index += 1
-    client.post("/admin/incident-mode/normal")
+    client.post("/admin/incident-mode/normal", headers={"x-request-id": "admin-reset"})
     print(f"Wrote {index} decisions to {args.output}")
 
 

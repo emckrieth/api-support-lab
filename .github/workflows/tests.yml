@@ -23,10 +23,11 @@ jobs:
       - name: Run tests
         run: pytest -q
 
-      - name: Check committed investigation example is current
+      - name: Check committed examples are current
         run: |
-          python scripts/investigate_decisions.py --output /tmp/investigation.md
-          diff examples/false-positive-investigation.md /tmp/investigation.md
+          python scripts/simulate_traffic.py
+          python scripts/investigate_decisions.py
+          git diff --exit-code -- examples/
 
       - name: Validate and unit test alert rules
         run: |
