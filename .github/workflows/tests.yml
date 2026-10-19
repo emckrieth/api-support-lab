@@ -1,0 +1,36 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Check committed investigation example is current
+        run: |
+          python scripts/investigate_decisions.py --output /tmp/investigation.md
+          diff examples/false-positive-investigation.md /tmp/investigation.md
+
+      - name: Validate and unit test alert rules
+        run: |
+          curl -sSL https://github.com/prometheus/prometheus/releases/download/v2.53.0/prometheus-2.53.0.linux-amd64.tar.gz \
+            | tar xz -C /tmp prometheus-2.53.0.linux-amd64/promtool
+          /tmp/prometheus-2.53.0.linux-amd64/promtool check rules monitoring/alert_rules.yml
+          /tmp/prometheus-2.53.0.linux-amd64/promtool test rules monitoring/alert_rules_test.yml

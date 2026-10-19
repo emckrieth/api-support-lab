@@ -1,0 +1,46 @@
+groups:
+  - name: api-support-lab
+    rules:
+      - alert: RiskApprovalRateDrop
+        expr: |
+          sum(rate(risk_decisions_total{decision="approve"}[15m]))
+            / sum(rate(risk_decisions_total[15m])) < 0.80
+        for: 10m
+        labels:
+          severity: page
+        annotations:
+          summary: "Risk approval rate below 80% for 10 minutes"
+          description: "Customers may be blocked. Check risk_rules_info for a recent rules change and follow docs/fraud-false-positive-runbook.md."
+
+      - alert: RiskReasonCodeSurge
+        expr: |
+          sum by (code) (rate(risk_reason_codes_total[15m]))
+            / scalar(sum(rate(risk_decisions_total[15m]))) > 0.40
+        for: 10m
+        labels:
+          severity: ticket
+        annotations:
+          summary: "Reason code {{ $labels.code }} fires on more than 40% of decisions"
+          description: "A single signal dominating decisions usually points to a rule or data change, not a fraud wave."
+
+      - alert: ApiHigh5xxRate
+        expr: |
+          sum(rate(http_requests_total{status=~"5.."}[5m]))
+            / sum(rate(http_requests_total[5m])) > 0.05
+        for: 5m
+        labels:
+          severity: page
+        annotations:
+          summary: "More than 5% of API requests failing with 5xx"
+          description: "Check app_incident_mode and the error events in /admin/logs for timeout or provider auth failures."
+
+      - alert: RiskDecisionLatencyHigh
+        expr: |
+          histogram_quantile(0.95,
+            sum by (le) (rate(http_request_duration_seconds_bucket{route="/risk/decisions"}[5m]))) > 0.5
+        for: 10m
+        labels:
+          severity: ticket
+        annotations:
+          summary: "p95 latency on /risk/decisions above 500 ms"
+          description: "Slow decisions can time out in customer checkout flows."
