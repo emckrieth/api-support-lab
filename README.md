@@ -166,6 +166,7 @@ api-support-lab/
 |-- README.md
 |-- Dockerfile
 |-- docker-compose.yml
+|-- pytest.ini
 |-- requirements.txt
 |-- .github/workflows/tests.yml
 |-- app/
