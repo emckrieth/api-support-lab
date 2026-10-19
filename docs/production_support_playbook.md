@@ -20,6 +20,7 @@ This playbook summarizes how I would approach a production API incident in a sup
 
 - Check `/health` or equivalent service health endpoints.
 - Review structured logs by request ID.
+- Check metrics for error rate, latency, and decision mix, and line changes up with releases.
 - Compare error patterns across recent requests.
 - Separate application errors from downstream dependency, authentication, and validation failures.
 
@@ -32,7 +33,7 @@ Include:
 - request ID or correlation ID
 - timestamp and endpoint
 - observed vs. expected behavior
-- relevant logs or query results
+- relevant logs, metric queries, or replay results
 - suspected failure domain
 
 ## 5. Validate Resolution
