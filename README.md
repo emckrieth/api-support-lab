@@ -21,7 +21,8 @@ Recommended Python version: 3.12. The pinned FastAPI and Pydantic stack is teste
 
 ```bash
 python -m venv .venv
-.venv\Scripts\activate
+.venv\Scripts\activate          # Windows
+# source .venv/bin/activate    # macOS / Linux
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
