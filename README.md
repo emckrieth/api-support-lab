@@ -104,6 +104,13 @@ curl "http://127.0.0.1:8000/admin/logs?request_id=case-4821"
 curl http://127.0.0.1:8000/metrics
 ```
 
+8. Deploy the hotfix rules and confirm the same request is approved again. `default` returns to the active rules version.
+
+```bash
+curl -X POST http://127.0.0.1:8000/admin/incident-mode/normal
+curl -X POST http://127.0.0.1:8000/admin/rules-version/2026.10.3
+```
+
 ## Fraud Scenario: Legitimate Customers Blocked
 
 A customer reports that real users are being declined at checkout. The lab reproduces the incident end to end:
@@ -111,13 +118,15 @@ A customer reports that real users are being declined at checkout. The lab repro
 1. `scripts/simulate_traffic.py` sends four hours of fictional checkout traffic: two hours on rules `2026.10.1`, then two hours after release `2026.10.2`, which set the `HIGH_AMOUNT` limit to 100 instead of 1000. The output is `examples/decision_events.log`.
 2. `scripts/investigate_decisions.py` reads the log, compares decision rates by rules version, finds the reason code driving the change, and re-scores every decision on the previous rules.
 3. The result, `examples/false-positive-investigation.md`, shows the approval rate falling 58 points. It also reports the replay: 145 decisions would have been approved on the previous rules. It ends with a ready-to-send escalation note.
+4. Hotfix `2026.10.3` restores the 1000 limit and keeps the intended weight increase. `--verify-fix` replays the incident traffic on it. `examples/hotfix-verification.md` shows all 145 blocked decisions approved, with the approval rate back to 97.9%.
+5. `docs/postmortem-high-amount-rule.md` covers the impact, timeline, root cause, and action items.
 
 ```bash
 python scripts/simulate_traffic.py
-python scripts/investigate_decisions.py
+python scripts/investigate_decisions.py --verify-fix 2026.10.3
 ```
 
-The matching runbook is `docs/fraud-false-positive-runbook.md`, and the `RiskApprovalRateDrop` alert in `monitoring/alert_rules.yml` is built to catch this before customers report it.
+The matching runbook is `docs/fraud-false-positive-runbook.md`, and the `RiskApprovalRateDrop` alert in `monitoring/alert_rules.yml` pages after 5 minutes so the team hears about it before customers do.
 
 ## Observability
 
@@ -181,12 +190,14 @@ api-support-lab/
 |   |-- fraud-false-positive-runbook.md
 |   |-- incident_runbook.md
 |   |-- observability.md
+|   |-- postmortem-high-amount-rule.md
 |   |-- production_support_playbook.md
 |   |-- sample_bug_report.md
 |   `-- troubleshooting-guide.md
 |-- examples/
 |   |-- decision_events.log
-|   `-- false-positive-investigation.md
+|   |-- false-positive-investigation.md
+|   `-- hotfix-verification.md
 |-- monitoring/
 |   |-- alert_rules.yml
 |   |-- alert_rules_test.yml

@@ -25,6 +25,18 @@
         {"code": "HIGH_VELOCITY", "description": "More than 5 attempts from this device in the last hour", "field": "device.velocity_1h", "op": "gt", "value": 5, "points": 25},
         {"code": "EMULATOR", "description": "Device appears to be an emulator", "field": "device.is_emulator", "op": "eq", "value": true, "points": 35}
       ]
+    },
+    "2026.10.3": {
+      "released": "2026-10-15",
+      "notes": "Hotfix for 2026.10.2. Restores the HIGH_AMOUNT limit to 1000 and keeps the intended weight increase to 45 points.",
+      "thresholds": {"review": 40, "decline": 70},
+      "signals": [
+        {"code": "HIGH_AMOUNT", "description": "Transaction amount is above the high-value limit", "field": "amount", "op": "gt", "value": 1000, "points": 45},
+        {"code": "COUNTRY_MISMATCH", "description": "Device IP country differs from billing country", "field": "device.ip_country", "op": "ne_field", "value": "billing_country", "points": 25},
+        {"code": "NEW_EMAIL", "description": "Email address is less than 7 days old", "field": "email_age_days", "op": "lt", "value": 7, "points": 15},
+        {"code": "HIGH_VELOCITY", "description": "More than 5 attempts from this device in the last hour", "field": "device.velocity_1h", "op": "gt", "value": 5, "points": 25},
+        {"code": "EMULATOR", "description": "Device appears to be an emulator", "field": "device.is_emulator", "op": "eq", "value": true, "points": 35}
+      ]
     }
   }
 }

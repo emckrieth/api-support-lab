@@ -37,13 +37,25 @@ tests:
       - series: 'risk_reason_codes_total{code="HIGH_AMOUNT",decision="decline"}'
         values: "0+2x60"
     alert_rule_test:
+      # Pending, not yet paging, before the 5-minute hold has passed.
+      - eval_time: 4m
+        alertname: RiskApprovalRateDrop
+        exp_alerts: []
+      - eval_time: 7m
+        alertname: RiskApprovalRateDrop
+        exp_alerts:
+          - exp_labels:
+              severity: page
+            exp_annotations:
+              summary: "Risk approval rate below 80% for 5 minutes"
+              description: "Customers may be blocked. Check risk_rules_info for a recent rules change and follow docs/fraud-false-positive-runbook.md."
       - eval_time: 30m
         alertname: RiskApprovalRateDrop
         exp_alerts:
           - exp_labels:
               severity: page
             exp_annotations:
-              summary: "Risk approval rate below 80% for 10 minutes"
+              summary: "Risk approval rate below 80% for 5 minutes"
               description: "Customers may be blocked. Check risk_rules_info for a recent rules change and follow docs/fraud-false-positive-runbook.md."
       - eval_time: 30m
         alertname: RiskReasonCodeSurge

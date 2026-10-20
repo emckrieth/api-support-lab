@@ -67,7 +67,7 @@ Defined in `monitoring/alert_rules.yml` and unit tested in `monitoring/alert_rul
 
 | Alert | Fires when | Severity | First step |
 | --- | --- | --- | --- |
-| `RiskApprovalRateDrop` | Approvals under 80% for 10 minutes | page | `docs/fraud-false-positive-runbook.md` |
+| `RiskApprovalRateDrop` | Approvals under 80% for 5 minutes | page | `docs/fraud-false-positive-runbook.md` |
 | `RiskReasonCodeSurge` | One reason code on more than 40% of decisions for 10 minutes | ticket | Compare rules versions; check for a data change |
 | `ApiHigh5xxRate` | More than 5% of requests return 5xx for 5 minutes | page | `docs/incident_runbook.md` |
 | `RiskDecisionLatencyHigh` | p95 on `/risk/decisions` above 500 ms for 10 minutes | ticket | Check downstream provider latency |
