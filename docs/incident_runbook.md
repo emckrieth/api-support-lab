@@ -24,6 +24,8 @@ Use this checklist to reproduce, scope, and communicate API verification issues 
 | `timeout` (risk) | `504 Device intelligence provider timeout` on `/risk/decisions` | Provider dependency issue affecting fraud decisions |
 | `rules_regression` | Risk decisions use rules `2026.10.2`; ordinary purchases go to review or decline | Bad rules release; follow `docs/fraud-false-positive-runbook.md` |
 
+Rules versions are deployed separately from incident modes with `POST /admin/rules-version/<version>`. Use `2026.10.3` for the hotfix and `default` to return to the active version. The `rules_regression` mode overrides a pinned version while it is active.
+
 ## Escalation Notes
 
 Include the request ID, timestamp, endpoint, response code, payload shape, and the relevant log event when escalating to engineering.

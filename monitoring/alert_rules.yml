@@ -5,11 +5,12 @@ groups:
         expr: |
           sum(rate(risk_decisions_total{decision="approve"}[15m]))
             / sum(rate(risk_decisions_total[15m])) < 0.80
-        for: 10m
+        # Blocked checkouts lose customer revenue every minute, so this pages faster than the ticket-level alerts.
+        for: 5m
         labels:
           severity: page
         annotations:
-          summary: "Risk approval rate below 80% for 10 minutes"
+          summary: "Risk approval rate below 80% for 5 minutes"
           description: "Customers may be blocked. Check risk_rules_info for a recent rules change and follow docs/fraud-false-positive-runbook.md."
 
       - alert: RiskReasonCodeSurge

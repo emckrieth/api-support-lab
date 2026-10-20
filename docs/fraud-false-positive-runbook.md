@@ -70,7 +70,15 @@ In the meantime, you can manually approve orders in review; we'll confirm whethe
 users should retry once the fix is in place.
 ```
 
-After the fix, confirm approval rates are back to baseline on the metrics before closing. Then send the customer the list of affected `event_id` values from the replay so they can follow up with their users.
+Before Engineering ships a fix, verify it against the incident traffic:
+
+```bash
+python scripts/investigate_decisions.py --log <decision log> --verify-fix <proposed rules version>
+```
+
+The fix passes when every wrongly blocked decision is approved, and any other difference from the previous rules is intended. See `examples/hotfix-verification.md`. In the lab, deploy it with `POST /admin/rules-version/<version>`.
+
+After the fix, confirm approval rates are back to baseline on the metrics before closing. Then send the customer the list of affected `event_id` values from the replay so they can follow up with their users. Write up the incident; `docs/postmortem-high-amount-rule.md` is an example.
 
 ## 7. Prevent the next one
 

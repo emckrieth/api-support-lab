@@ -11,7 +11,7 @@ from app.risk import load_rules, score_event
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from investigate_decisions import investigate, load_decisions, render_markdown  # noqa: E402
+from investigate_decisions import investigate, load_decisions, render_fix_markdown, render_markdown, verify_fix  # noqa: E402
 
 client = TestClient(api.app)
 HEADERS = {"x-api-key": "demo-key"}
@@ -57,6 +57,13 @@ class TestRiskRules:
         result = score_event(risk_event(billing_country="us"), self.baseline)
         assert result["reason_codes"] == []
 
+    def test_hotfix_restores_limit_and_keeps_weight_increase(self):
+        hotfix = RULES["versions"]["2026.10.3"]
+        assert score_event(risk_event(), hotfix)["decision"] == "approve"
+        over_limit = score_event(risk_event(amount=1500), hotfix)
+        assert over_limit["decision"] == "review"
+        assert over_limit["risk_score"] == 45
+
     def test_regression_rules_flag_ordinary_amounts(self):
         assert score_event(risk_event(), self.regression)["decision"] == "review"
         assert score_event(risk_event(email_age_days=2), self.regression)["decision"] == "review"
@@ -99,6 +106,21 @@ class TestRiskEndpoint:
         decision = next(e for e in logged_events() if e["event_type"] == "risk_decision")
         assert decision["payload"]["input"]["amount"] == 150.0
         assert decision["payload"]["rules_version"] == "2026.10.1"
+
+    def test_rules_version_endpoint_deploys_hotfix_and_resets(self):
+        assert client.post("/admin/rules-version/2026.10.3").json()["rules_version"] == "2026.10.3"
+        assert client.get("/health").json()["rules_version"] == "2026.10.3"
+        body = client.post("/risk/decisions", json=risk_event(), headers=HEADERS).json()
+        assert (body["decision"], body["rules_version"]) == ("approve", "2026.10.3")
+        assert client.post("/admin/rules-version/default").json()["rules_version"] == "2026.10.1"
+
+    def test_unknown_rules_version_is_rejected(self):
+        assert client.post("/admin/rules-version/1999.01.1").status_code == 404
+
+    def test_rules_regression_mode_overrides_pinned_version(self):
+        client.post("/admin/rules-version/2026.10.3")
+        client.post("/admin/incident-mode/rules_regression")
+        assert client.get("/health").json()["rules_version"] == "2026.10.2"
 
     def test_unknown_incident_mode_is_rejected(self):
         assert client.post("/admin/incident-mode/chaos").status_code == 400
@@ -162,6 +184,19 @@ class TestInvestigation:
         assert (finding["previous_version"], finding["new_version"]) == ("2026.10.1", "2026.10.2")
         assert finding["impacted"] > 0
         assert "Approval drop confirmed" in render_markdown(result)
+
+    def test_hotfix_verification_recovers_every_blocked_decision(self):
+        decisions = load_decisions(ROOT / "examples" / "decision_events.log")
+        check = verify_fix(decisions, RULES, "2026.10.3")
+        assert check["impacted"] == check["recovered"] > 0
+        assert check["still_blocked"] == []
+        assert "Fix verified" in render_fix_markdown(check)
+
+    def test_verification_flags_a_fix_that_does_not_work(self):
+        decisions = load_decisions(ROOT / "examples" / "decision_events.log")
+        check = verify_fix(decisions, RULES, "2026.10.2")
+        assert check["recovered"] == 0
+        assert "Fix incomplete" in render_fix_markdown(check)
 
     def test_single_version_has_no_finding(self, tmp_path):
         client.post("/risk/decisions", json=risk_event(), headers=HEADERS)

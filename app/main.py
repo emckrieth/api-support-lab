@@ -21,7 +21,7 @@ from .risk import load_rules, score_event
 app = FastAPI(title="API Support Lab", version="1.1.0")
 DEFAULT_LOG_PATH = Path(__file__).resolve().parent.parent / "support_events.log"
 LOG_PATH = Path(os.environ.get("SUPPORT_LOG_PATH", DEFAULT_LOG_PATH))
-STATE = {"incident_mode": "normal"}
+STATE = {"incident_mode": "normal", "rules_version": None}
 INCIDENT_MODES = {"normal", "timeout", "auth_error", "validation_error", "rules_regression"}
 RULES = load_rules()
 # Scrapes and log reads would drown out customer traffic in the access log.
@@ -46,7 +46,7 @@ def log_event(event_type: str, request_id: str, payload: dict) -> None:
 def active_rules_version() -> str:
     if STATE["incident_mode"] == "rules_regression":
         return RULES["regression_version"]
-    return RULES["active_version"]
+    return STATE["rules_version"] or RULES["active_version"]
 
 
 @app.middleware("http")
@@ -168,6 +168,18 @@ def set_incident_mode(mode: str):
         raise HTTPException(status_code=400, detail="Unsupported mode")
     STATE["incident_mode"] = mode
     return {"incident_mode": mode, "rules_version": active_rules_version()}
+
+
+@app.post("/admin/rules-version/{version}")
+def set_rules_version(version: str):
+    """Pin the rules version, the way a hotfix or rollback is deployed. `default` returns to the active version."""
+    if version == "default":
+        STATE["rules_version"] = None
+    elif version in RULES["versions"]:
+        STATE["rules_version"] = version
+    else:
+        raise HTTPException(status_code=404, detail=f"Unknown rules version: {version}")
+    return {"rules_version": active_rules_version(), "incident_mode": STATE["incident_mode"]}
 
 
 @app.post("/webhooks/verification")

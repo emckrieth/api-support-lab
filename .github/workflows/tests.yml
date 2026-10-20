@@ -26,7 +26,7 @@ jobs:
       - name: Check committed examples are current
         run: |
           python scripts/simulate_traffic.py
-          python scripts/investigate_decisions.py
+          python scripts/investigate_decisions.py --verify-fix 2026.10.3
           git diff --exit-code -- examples/
 
       - name: Validate and unit test alert rules
