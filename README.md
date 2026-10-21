@@ -2,6 +2,12 @@
 
 A small, fully functional support-engineering lab built to demonstrate API troubleshooting, webhook handling, incident reproduction, fraud decision investigation, and observability.
 
+## Development approach
+
+This lab was developed with assistance from Claude and Codex. Claude-authored commits introduced substantial parts of the fraud decision, observability, investigation, and test features. Commit attribution is retained. Generated example logs and automated tests demonstrate lab behavior, not production operating experience.
+
+The source, tests, and commit history make the implementation inspectable. Review and integration case studies will record specific decisions, verification results, and remaining limitations as that work is completed.
+
 ## What It Shows
 
 - FastAPI service with health, verification, risk decision, webhook, metrics, and admin incident endpoints
