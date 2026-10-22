@@ -8,6 +8,8 @@ This lab was developed with assistance from Claude and Codex. Claude-authored co
 
 The source, tests, and commit history make the implementation inspectable. Review and integration case studies will record specific decisions, verification results, and remaining limitations as that work is completed.
 
+Assistant-executed HTTP incident reproduction and fresh replay were verified on October 22, 2026. See the [incident walkthrough and evidence](docs/incident-reproduction-walkthrough.md). The owner personal API walkthrough remains pending; this is separate from the completed Slack walkthrough in the identity lab.
+
 ## What It Shows
 
 - FastAPI service with health, verification, risk decision, webhook, metrics, and admin incident endpoints

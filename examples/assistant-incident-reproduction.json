@@ -1,0 +1,173 @@
+{
+  "run_id": "2ea59372a66441b1b38ac4c9d887635e",
+  "started_at_utc": "2026-10-22T21:52:58.950213+00:00",
+  "executor": "Codex assistant, delegated by repository owner",
+  "status": "passed",
+  "checks": [
+    {
+      "stage": "baseline",
+      "rules_version": "2026.10.1",
+      "amount": 180,
+      "http_status": 200,
+      "health_http_status": 200,
+      "decision": "approve",
+      "score": 0,
+      "request_id": "2ea59372a66441b1b38ac4c9d887635e-baseline-180",
+      "reason_codes": [],
+      "trace_verified": true
+    },
+    {
+      "stage": "baseline",
+      "rules_version": "2026.10.1",
+      "amount": 1200,
+      "http_status": 200,
+      "health_http_status": 200,
+      "decision": "approve",
+      "score": 20,
+      "request_id": "2ea59372a66441b1b38ac4c9d887635e-baseline-1200",
+      "reason_codes": [
+        "HIGH_AMOUNT"
+      ],
+      "trace_verified": true
+    },
+    {
+      "stage": "regression",
+      "rules_version": "2026.10.2",
+      "amount": 180,
+      "http_status": 200,
+      "health_http_status": 200,
+      "decision": "review",
+      "score": 45,
+      "request_id": "2ea59372a66441b1b38ac4c9d887635e-regression-180",
+      "reason_codes": [
+        "HIGH_AMOUNT"
+      ],
+      "trace_verified": true
+    },
+    {
+      "stage": "regression",
+      "rules_version": "2026.10.2",
+      "amount": 1200,
+      "http_status": 200,
+      "health_http_status": 200,
+      "decision": "review",
+      "score": 45,
+      "request_id": "2ea59372a66441b1b38ac4c9d887635e-regression-1200",
+      "reason_codes": [
+        "HIGH_AMOUNT"
+      ],
+      "trace_verified": true
+    },
+    {
+      "stage": "hotfix",
+      "rules_version": "2026.10.3",
+      "amount": 180,
+      "http_status": 200,
+      "health_http_status": 200,
+      "decision": "approve",
+      "score": 0,
+      "request_id": "2ea59372a66441b1b38ac4c9d887635e-hotfix-180",
+      "reason_codes": [],
+      "trace_verified": true
+    },
+    {
+      "stage": "hotfix",
+      "rules_version": "2026.10.3",
+      "amount": 1200,
+      "http_status": 200,
+      "health_http_status": 200,
+      "decision": "review",
+      "score": 45,
+      "request_id": "2ea59372a66441b1b38ac4c9d887635e-hotfix-1200",
+      "reason_codes": [
+        "HIGH_AMOUNT"
+      ],
+      "trace_verified": true
+    }
+  ],
+  "limits": [
+    "Local lab with fictional transactions, not production traffic",
+    "HTTP reproduction does not prove alert delivery or real fraud outcomes",
+    "Replay false positives mean differences from baseline rules, not independently verified fraud ground truth.",
+    "Replay timestamps and latency are synthetic; they do not measure production performance.",
+    "The temporary HTTP server is terminated after each run; it is not a production deployment."
+  ],
+  "metrics_versions_verified": true,
+  "finished_at_utc": "2026-10-22T21:53:03.961304+00:00",
+  "owner_personal_walkthrough": "pending; not established by this assistant-executed run",
+  "replay": {
+    "execution_recorded_at_utc": "2026-10-22T21:54:14.520235+00:00",
+    "traffic": "480 fictional decisions generated in-process with fixed clock, random seed and simulated latency",
+    "summaries": [
+      {
+        "rules_version": "2026.10.1",
+        "first_seen": "2026-10-14T13:00:00+00:00",
+        "last_seen": "2026-10-14T14:59:30+00:00",
+        "decisions": 240,
+        "approve_rate": 95.8,
+        "review_rate": 3.8,
+        "decline_rate": 0.4,
+        "code_fire_rate": {
+          "NEW_EMAIL": 15.8,
+          "HIGH_VELOCITY": 5.0,
+          "COUNTRY_MISMATCH": 10.0,
+          "EMULATOR": 2.5
+        },
+        "top_decline_codes": [
+          [
+            "EMULATOR",
+            1
+          ],
+          [
+            "COUNTRY_MISMATCH",
+            1
+          ],
+          [
+            "NEW_EMAIL",
+            1
+          ]
+        ]
+      },
+      {
+        "rules_version": "2026.10.2",
+        "first_seen": "2026-10-14T15:00:00+00:00",
+        "last_seen": "2026-10-14T16:59:30+00:00",
+        "decisions": 240,
+        "approve_rate": 37.5,
+        "review_rate": 54.6,
+        "decline_rate": 7.9,
+        "code_fire_rate": {
+          "HIGH_AMOUNT": 61.7,
+          "COUNTRY_MISMATCH": 9.2,
+          "HIGH_VELOCITY": 2.5,
+          "NEW_EMAIL": 11.2,
+          "EMULATOR": 2.9
+        },
+        "top_decline_codes": [
+          [
+            "HIGH_AMOUNT",
+            19
+          ],
+          [
+            "COUNTRY_MISMATCH",
+            10
+          ],
+          [
+            "HIGH_VELOCITY",
+            5
+          ]
+        ]
+      }
+    ],
+    "approval_rate_change_points": -58.3,
+    "driver_code": "HIGH_AMOUNT",
+    "incident_decisions": 240,
+    "impacted": 145,
+    "recovered": 145,
+    "approval_rates_on_same_incident_inputs": {
+      "incident": 37.5,
+      "previous": 97.9,
+      "fix": 97.9
+    }
+  }
+}

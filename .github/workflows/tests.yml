@@ -23,6 +23,9 @@ jobs:
       - name: Run tests
         run: pytest -q
 
+      - name: Reproduce incident over loopback HTTP
+        run: python scripts/reproduce_incident.py
+
       - name: Check committed examples are current
         run: |
           python scripts/simulate_traffic.py
@@ -35,3 +38,11 @@ jobs:
             | tar xz -C /tmp prometheus-2.53.0.linux-amd64/promtool
           /tmp/prometheus-2.53.0.linux-amd64/promtool check rules monitoring/alert_rules.yml
           /tmp/prometheus-2.53.0.linux-amd64/promtool test rules monitoring/alert_rules_test.yml
+
+      - name: Upload fresh HTTP reproduction evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: http-incident-reproduction
+          path: output/incident-*/http-results.json
+          if-no-files-found: warn
