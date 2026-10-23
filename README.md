@@ -8,7 +8,7 @@ This lab was developed with assistance from Claude and Codex. Claude-authored co
 
 The source, tests, and commit history make the implementation inspectable. Review and integration case studies will record specific decisions, verification results, and remaining limitations as that work is completed.
 
-Assistant-executed HTTP incident reproduction and fresh replay were verified on October 22, 2026. See the [incident walkthrough and evidence](docs/incident-reproduction-walkthrough.md). The owner personal API walkthrough remains pending; this is separate from the completed Slack walkthrough in the identity lab.
+The owner completed a guided HTTP incident walkthrough: six request scenarios, a regression log trace, fresh replay recovering 145 baseline-relative blocked decisions, and 29 passing tests. See [my contribution and results](docs/incident-reproduction-walkthrough.md) and [sanitized owner-run evidence](examples/owner-incident-walkthrough.json). The earlier assistant-run evidence remains separately archived.
 
 ## What It Shows
 

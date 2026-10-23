@@ -2,9 +2,20 @@
 
 ## Execution and attribution
 
-Codex executed this reproduction on October 22, 2026 at the owner's request. The owner personal API walkthrough remains pending. Claude implemented substantial parts of the existing risk, observability and investigation features; their attribution is retained. Codex added the isolated HTTP runner, fresh evidence snapshot and this guide.
+The owner completed the guided execution recorded on October 23, 2026. Codex supplied commands, expected outcomes and explanations; the owner ran the HTTP reproduction, inspected a regression request trace, generated fresh replay evidence and ran all 29 tests. The earlier October 22 assistant execution is preserved separately.
 
-[Observed results](../examples/assistant-incident-reproduction.json) include run identifiers, execution timestamps, request traces and replay counts. The runner starts a separate Uvicorn process bound to 127.0.0.1 on an available port and terminates its own server after the run. The request data is fictional.
+| My work | AI assistance | Evidence |
+| --- | --- | --- |
+| Executed six baseline/regression/hotfix HTTP cases | Codex wrote the runner and supplied commands | [Owner-run snapshot](../examples/owner-incident-walkthrough.json) |
+| Filtered and inspected the $180 regression log event | Codex supplied the filter and explained the rule | Actual HIGH_AMOUNT trace, score 45, rules 2026.10.2 |
+| Ran fresh traffic simulation and hotfix replay | Claude implemented substantial investigation features; Codex guided the run | 480 decisions; -58.3 percentage-point change; 145 recovered |
+| Ran the API test suite | Existing AI-assisted tests | Owner-provided output: 29 passed, one dependency warning |
+
+This establishes guided hands-on execution, not independent diagnosis or independent implementation. Original Claude commit attribution remains intact.
+
+[Earlier assistant-run results](../examples/assistant-incident-reproduction.json) include run identifiers, execution timestamps, request traces and replay counts. The runner starts a separate Uvicorn process bound to 127.0.0.1 on an available port and terminates its own server after the run. The request data is fictional.
+
+![Generated summary of the six observed checkout decisions](assets/observed-risk-decisions.svg)
 
 ## Observed HTTP results
 
@@ -48,9 +59,11 @@ python -m venv .venv
 
 The HTTP runner writes a unique ignored output/incident-<run-id>/ folder with its report, request log, metrics and server log. Each HTTP run has a fresh directory. The named replay files above are refreshed on rerun; committed examples are preserved. CI executes the HTTP runner and uploads only fresh HTTP result files, not this archived snapshot. Existing tests: 29 passed locally. A dependency deprecation warning was observed; it did not fail the run.
 
-## Owner walkthrough still to perform
+## Result and next ownership milestone
 
-Run the commands yourself, inspect a regression request's reason code and trace, compare the old and new HIGH_AMOUNT threshold, and explain why the hotfix restores the ordinary checkout while retaining review for the higher amount. Record your own observation or question before marking the personal walkthrough complete.
+The ordinary $180 checkout returned to approval under the hotfix while the $1,200 checkout retained the intended review behavior. The owner supplied actual trace and test output. The threshold/weight reasoning was explained by Codex, rather than recorded as an independently discovered owner finding.
+
+Next: diagnose a different small lab failure with fewer supplied steps, documenting chosen evidence, hypotheses and any hints used. That separate exercise is not marked complete by this walkthrough.
 
 ## Boundaries
 

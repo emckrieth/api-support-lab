@@ -1,0 +1,126 @@
+{
+  "run_id": "485738eca05445159d389f9a9a59e10c",
+  "started_at_utc": "2026-10-23T05:03:04.434351+00:00",
+  "executor": "Repository owner, following Codex-provided commands in a guided walkthrough",
+  "status": "passed",
+  "checks": [
+    {
+      "stage": "baseline",
+      "rules_version": "2026.10.1",
+      "amount": 180,
+      "http_status": 200,
+      "health_http_status": 200,
+      "decision": "approve",
+      "score": 0,
+      "request_id": "485738eca05445159d389f9a9a59e10c-baseline-180",
+      "reason_codes": [],
+      "trace_verified": true
+    },
+    {
+      "stage": "baseline",
+      "rules_version": "2026.10.1",
+      "amount": 1200,
+      "http_status": 200,
+      "health_http_status": 200,
+      "decision": "approve",
+      "score": 20,
+      "request_id": "485738eca05445159d389f9a9a59e10c-baseline-1200",
+      "reason_codes": [
+        "HIGH_AMOUNT"
+      ],
+      "trace_verified": true
+    },
+    {
+      "stage": "regression",
+      "rules_version": "2026.10.2",
+      "amount": 180,
+      "http_status": 200,
+      "health_http_status": 200,
+      "decision": "review",
+      "score": 45,
+      "request_id": "485738eca05445159d389f9a9a59e10c-regression-180",
+      "reason_codes": [
+        "HIGH_AMOUNT"
+      ],
+      "trace_verified": true
+    },
+    {
+      "stage": "regression",
+      "rules_version": "2026.10.2",
+      "amount": 1200,
+      "http_status": 200,
+      "health_http_status": 200,
+      "decision": "review",
+      "score": 45,
+      "request_id": "485738eca05445159d389f9a9a59e10c-regression-1200",
+      "reason_codes": [
+        "HIGH_AMOUNT"
+      ],
+      "trace_verified": true
+    },
+    {
+      "stage": "hotfix",
+      "rules_version": "2026.10.3",
+      "amount": 180,
+      "http_status": 200,
+      "health_http_status": 200,
+      "decision": "approve",
+      "score": 0,
+      "request_id": "485738eca05445159d389f9a9a59e10c-hotfix-180",
+      "reason_codes": [],
+      "trace_verified": true
+    },
+    {
+      "stage": "hotfix",
+      "rules_version": "2026.10.3",
+      "amount": 1200,
+      "http_status": 200,
+      "health_http_status": 200,
+      "decision": "review",
+      "score": 45,
+      "request_id": "485738eca05445159d389f9a9a59e10c-hotfix-1200",
+      "reason_codes": [
+        "HIGH_AMOUNT"
+      ],
+      "trace_verified": true
+    }
+  ],
+  "limits": [
+    "Local lab with fictional transactions, not production traffic",
+    "HTTP reproduction does not prove alert delivery or real fraud outcomes",
+    "Owner completed guided execution; independent diagnosis and comprehensive code review are not established.",
+    "Replay uses fictional transactions with synthetic timing; baseline agreement is not fraud ground truth."
+  ],
+  "metrics_versions_verified": true,
+  "finished_at_utc": "2026-10-23T05:03:06.355420+00:00",
+  "walkthrough_recorded_date": "2026-10-23",
+  "owner_actions": [
+    "Ran the six-case HTTP reproduction locally",
+    "Filtered the risk_decision log for the $180 regression request and shared its actual JSON trace",
+    "Generated fresh fictional replay traffic and ran investigation plus hotfix verification",
+    "Ran pytest and shared output: 29 passed, one dependency deprecation warning"
+  ],
+  "ai_assistance": [
+    "Codex supplied implementation, commands, expected results and the hotfix explanation",
+    "No independent diagnosis or independent implementation is inferred from guided execution"
+  ],
+  "owner_reported_tests": {
+    "passed": 29,
+    "warnings": 1,
+    "source": "Owner-provided terminal output; not a separately captured test-result file"
+  },
+  "replay": {
+    "source": "Fresh artifacts in the owner run folder, corroborated by owner-provided output",
+    "generated_decisions": 480,
+    "incident_decisions": 240,
+    "approval_rate_change_points": -58.3,
+    "driver_code": "HIGH_AMOUNT",
+    "impacted_relative_to_baseline": 145,
+    "recovered": 145,
+    "approval_rates_on_identical_incident_inputs": {
+      "incident": 37.5,
+      "previous": 97.9,
+      "fix": 97.9
+    }
+  }
+}
